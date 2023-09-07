@@ -60,11 +60,11 @@ public class HealthSystem : MonoBehaviour
         health = 0;
         rb.bodyType = RigidbodyType2D.Dynamic;
         await Task.Delay(2000);
-        //RestartLevel();
+        RestartLevel();
     }
 
     private void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(0);
     }
 }
