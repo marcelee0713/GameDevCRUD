@@ -64,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         hitBoxObj = GameObject.FindWithTag("PlayerHitBox");
         hitBoxCollider = hitBoxObj.GetComponent<Transform>();
+        PlayerPrefs.DeleteAll(); ;
         isKnockedBack = false;
     }
 
