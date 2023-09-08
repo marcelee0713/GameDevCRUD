@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,15 +16,22 @@ public class HealthSystem : MonoBehaviour
     private Rigidbody2D rb;
     public PlayerMovement playerMovement;
 
+    public GameObject GameOverScene;
+    public GameObject WinScene;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void Update()
     {
- 
+        if(UpdateUI.userGems == 8)
+        {
+            GameOverScene.SetActive(false);
+            WinScene.SetActive(true);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -54,17 +62,18 @@ public class HealthSystem : MonoBehaviour
 
     }
 
-    private async void Die()
+    private void Die()
     {
         anim.SetTrigger("death");
         health = 0;
         rb.bodyType = RigidbodyType2D.Dynamic;
-        await Task.Delay(2000);
-        RestartLevel();
+        GameOverScene.SetActive(true);
+        WinScene.SetActive(false);
     }
 
-    private void RestartLevel()
+    public void RestartLevel()
     {
         SceneManager.LoadScene(0);
+        PlayerPrefs.DeleteAll();
     }
 }

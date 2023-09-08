@@ -10,6 +10,8 @@ public class UpdateUI : MonoBehaviour
     private TextMeshProUGUI UIText;
     private string ObjectID;
 
+    public static int userGems = 0;
+
     private void Awake()
     {
         UIText = GetComponent<TextMeshProUGUI>();
@@ -18,6 +20,7 @@ public class UpdateUI : MonoBehaviour
      
     private void LateUpdate()
     {
+        userGems = PlayerPrefs.GetInt(ObjectID, 0);
         UIText.text = PlayerPrefs.GetInt(ObjectID).ToString();
     }
 }

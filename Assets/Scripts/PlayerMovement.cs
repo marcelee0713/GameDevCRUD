@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -51,11 +52,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private TrailRenderer tr;
     public ParticleSystem dust;
 
+    [Header("Effects and Essentials")]
+    public TextMeshProUGUI countStr;
+    public static bool win = false;
+
+
     private enum MovementState
     {
         idle, running, jumping, falling, attack, secondAttack, thirdAttack
     }
-    // Start is called before the first frame update
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -64,23 +69,34 @@ public class PlayerMovement : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         hitBoxObj = GameObject.FindWithTag("PlayerHitBox");
         hitBoxCollider = hitBoxObj.GetComponent<Transform>();
-        PlayerPrefs.DeleteAll(); ;
+        PlayerPrefs.DeleteAll();
         isKnockedBack = false;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (isDashing || isKnockedBack || healthSystem.health <= 0) return;
+        if (isDashing || isKnockedBack || healthSystem.health <= 0 || UpdateUI.userGems == 8) return;
 
         if (comboTimeStamp <= Time.time) combo = 0;
 
-        dirX = joystick.Horizontal;
+        dirX = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(dirX * runningSpeed, rb.velocity.y);
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Dash();
+        }
+        if (Input.GetMouseButton(0))
+        {
+            Attack();
+        }
+
         UpdateAnimationState();
-
-
     }
 
     private void UpdateAnimationState()
@@ -183,7 +199,8 @@ public class PlayerMovement : MonoBehaviour
         if (IsGrounded() && healthSystem.health > 0)
         {
             createDust();
-            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+
+            rb.AddForce(Vector2.up * jumpPower);
         }
 
     }

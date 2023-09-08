@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]private Transform player;
+    [SerializeField] private Transform player;
     private void Update()
     {
         if (player.position.y <= 1)
